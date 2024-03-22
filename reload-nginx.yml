@@ -1,0 +1,18 @@
+---
+- name: Reload and verify Nginx
+  hosts: compute
+  become: yes
+  tasks:
+    - name: Reload Nginx configuration
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+
+    - name: Check if Nginx is running
+      register: nginx_status
+      ansible.builtin.command:
+        cmd: systemctl is-active nginx
+
+    - name: Display Nginx status
+      ansible.builtin.debug:
+        msg: "Nginx is {{ nginx_status.stdout }}"

@@ -1,0 +1,27 @@
+---
+- name: Listen for events on a webhook
+  hosts: all
+
+  sources:
+    # use webhook with path /endpoint
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+
+  # define the conditions we are looking for
+  rules:
+    - name: Rule 1
+      condition: event.payload.message == "Hello"
+
+      # define the action after meeting the condition
+      action:
+        run_playbook:
+          name: what.yml
+
+    # as it's a list of dicts, we can add another rule
+    - name: Rule 2
+      condition: event.payload.message == "Ahoj"
+
+      action:
+        run_playbook:
+          name: co.yml
